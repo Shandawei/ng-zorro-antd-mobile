@@ -21,7 +21,7 @@ import * as touchEvent from '../core/util/touch-event';
   templateUrl: './carousel.component.html'
 })
 export class CarouselComponent implements AfterViewInit, OnDestroy {
-  slideHeight;
+  slideHeight: number;
   touchObject;
   style = {
     height: 'auto',
@@ -85,6 +85,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
   @HostListener('mousedown', ['$event'])
   @HostListener('touchstart', ['$event'])
   panstart(event) {
+    event.stopPropagation();
     if (!this.dragging) {
       return;
     }
@@ -96,13 +97,15 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
       direction: this.touchObject.direction
     };
   }
+
   @HostListener('mousemove', ['$event'])
   @HostListener('touchmove', ['$event'])
   panmove(event) {
+    event.stopPropagation();
     if (!this.dragging && !this._isMouseDown) {
       return;
     }
-    const { direction, xDist } = this.swipeDirection(
+    const { direction } = this.swipeDirection(
       this.touchObject.startX,
       touchEvent.getEventTarget(event).pageX,
       this.touchObject.startY,
@@ -132,10 +135,12 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
 
     this.getListStyles(offset);
   }
+
   @HostListener('mouseleave', ['$event'])
   @HostListener('mouseup', ['$event'])
   @HostListener('touchend', ['$event'])
-  panend() {
+  panend(event) {
+    event.stopPropagation();
     if (!this.dragging && !this._isMouseDown) {
       return;
     }
@@ -150,6 +155,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
       this.startTimer();
     }, this.speed);
   }
+
   @HostListener('touchcancel', ['$event'])
   cancel() {
     setTimeout(() => {
@@ -159,10 +165,19 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
 
   constructor(private _ele: ElementRef) {}
 
+  initCarouselSize() {
+    const nativeElement = this._ele.nativeElement;
+    this.slideHeight = nativeElement.querySelector('carouselslide').clientHeight;
+    this._currentSlideHeight = this.slideHeight * this.slideWidth;
+    this._currentSlideWidth = nativeElement.clientWidth;
+    this._rationWidth = this.vertical ? this._currentSlideHeight : this._currentSlideWidth * this.slideWidth;
+    this._spaceWidth = ((this.vertical ? this.slideHeight : this._currentSlideWidth) - this._rationWidth) / 2;
+  }
+
   carouselInit(items) {
-    this.infinite = this.infinite === undefined ? true : this.infinite;
+    this.infinite = this.infinite || true;
     this._nodeArr = items['_results'];
-    this.dragging = this._nodeArr.length > 1 && this.dragging ? this.dragging : false;
+    // this.dragging = this._nodeArr.length > 1 && this.dragging ? this.dragging : false;
     this.dragging = this.dragging ? this.dragging : false;
     if (this._nodeArr.length > 1) {
       this._lastIndex = this._nodeArr.length - 1;
@@ -177,7 +192,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
       }, 0);
     } else if (this._nodeArr.length === 1) {
       setTimeout(() => {
-        this._nodeArr.forEach((v, index) => {
+        this._nodeArr.forEach((v) => {
           v.width = this._rationWidth - this.cellSpacing;
           v.left = 0;
           v.top = 0;
@@ -194,8 +209,8 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
     this.stopTimer();
     this._timer = this.autoplayInterval
       ? setInterval(() => {
-          this.carousel(1);
-        }, this.autoplayInterval)
+        this.carousel(1);
+      }, this.autoplayInterval)
       : 0;
   }
 
@@ -223,12 +238,15 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
   moveUp() {
     this.gotoCarousel(this.getAfterNode(false));
   }
+
   moveDown() {
     this.gotoCarousel(this.getAfterNode(true));
   }
+
   moveLeft() {
     this.gotoCarousel(this.getAfterNode(false));
   }
+
   moveRight() {
     this.gotoCarousel(this.getAfterNode(true));
   }
@@ -339,9 +357,6 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
             v.left = this.vertical ? 0 : (this._nodeArr.length - 1) * this._rationWidth;
             v.top = this.vertical ? (this._nodeArr.length - 1) * this._rationWidth : 0;
           }
-        } else if (index === this._nodeArr.length - 2 && 0 === tempIndex) {
-          v.left = 0;
-          v.top = this.vertical ? this._nodeArr.length * this._rationWidth : 0;
         } else if (index === this._nodeArr.length - 1 && tempIndex === 1 && this.autoplay) {
           v.left = this.vertical ? 0 : (this._nodeArr.length + tempIndex) * this._rationWidth;
           v.top = this.vertical ? tempIndex * this._rationWidth : 0;
@@ -435,12 +450,13 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
   get page() {
     return this.dots ? this.selectedIndex : 0;
   }
+
   get pageCount() {
     return this.dots ? this.items.length : 0;
   }
 
   get dotindicatorStatus() {
-    return this.dots ? (this.items.length > 1 ? true : false) : this.dots;
+    return this.dots ? (this.items.length > 1) : this.dots;
   }
 
   ngAfterViewInit() {
@@ -449,6 +465,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
     this.items.changes.subscribe(items => {
       this.carouselInit(items);
     });
+    this.initCarouselSize();
     this.getListStyles();
     this.carouselInit(this.items);
     const nativeElement = this._ele.nativeElement;
@@ -458,14 +475,10 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
       for (const mutation of mutationsList) {
         if (mutation.type == 'attributes') {
           if (this.slideHeight !== nativeElement.querySelector('carouselslide').clientHeight) {
-            this.slideHeight = nativeElement.querySelector('carouselslide').clientHeight;
-            this._currentSlideHeight = this.slideHeight * this.slideWidth;
-            this._currentSlideWidth = nativeElement.clientWidth;
-            this._rationWidth = this.vertical ? this._currentSlideHeight : this._currentSlideWidth * this.slideWidth;
-            this._spaceWidth = ((this.vertical ? this.slideHeight : this._currentSlideWidth) - this._rationWidth) / 2;
+            this.initCarouselSize();
             this.getListStyles();
           }
-          }
+        }
       }
     };
 

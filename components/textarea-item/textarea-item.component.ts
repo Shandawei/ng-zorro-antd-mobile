@@ -6,12 +6,21 @@ import {
   EventEmitter,
   ViewChild,
   TemplateRef,
-  AfterContentChecked
+  AfterContentChecked,
+  forwardRef
 } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'TextareaItem , nzm-textarea-item',
-  templateUrl: './textarea-item.component.html'
+  templateUrl: './textarea-item.component.html',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => TextareaItem),
+      multi: true
+    }
+  ],
 })
 export class TextareaItem implements OnInit, AfterContentChecked {
   prefixCls: string = 'am-textarea';
@@ -157,6 +166,7 @@ export class TextareaItem implements OnInit, AfterContentChecked {
   set focus(value) {
     if (value && value.focus) {
       this.textRef.nativeElement.focus();
+      this.inputFocus('');
     }
   }
   @Input()

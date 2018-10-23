@@ -148,14 +148,10 @@ describe('TextareaComponent', () => {
     const textarea = textareaEle.nativeElement.querySelector('textarea');
     expect(textarea.getAttribute('style')).toContain('height');
   });
-
   it('should focus work', () => {
-    component.value = 'test';
-    fixture.detectChanges();
     component.clickTitle();
     fixture.detectChanges();
-    const inputDivEle = textareaEle.nativeElement.querySelector('.am-textarea-item');
-    expect(inputDivEle.classList).toContain('am-textarea-focus');
+    expect(component.focusFn).toHaveBeenCalled();
   });
   it('should errorClickFn work', () => {
     component.error = true;

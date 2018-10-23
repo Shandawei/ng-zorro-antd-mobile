@@ -1,5 +1,4 @@
 import { Component, Input, ViewEncapsulation, HostBinding } from '@angular/core';
-const classnames = require('classnames');
 
 @Component({
   selector: 'Flex, nzm-flex',
@@ -138,7 +137,7 @@ export class FlexComponent {
 }
 
 @Component({
-  selector: 'FlexItem',
+  selector: 'FlexItem, nzm-flex-item',
   template: `
     <ng-content></ng-content>
   `,

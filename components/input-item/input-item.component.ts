@@ -8,16 +8,23 @@ import {
   OnChanges,
   HostBinding,
   Renderer2,
-  ElementRef
+  ElementRef,
+  forwardRef
 } from '@angular/core';
-import { ElementDef } from '@angular/core/src/view';
-const classnames = require('classnames');
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'InputItem, nzm-input-item',
-  templateUrl: './input-item.component.html'
+  templateUrl: './input-item.component.html',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => InputItem),
+      multi: true
+    }
+  ],
 })
-export class InputItem implements OnInit, OnChanges {
+export class InputItem implements OnInit, OnChanges, ControlValueAccessor {
   prefixCls: string = 'am-input';
   wrapCls: object;
   labelCls: object;
@@ -321,6 +328,18 @@ export class InputItem implements OnInit, OnChanges {
       this.onExtraClick.emit(e);
     }
   }
+
+  writeValue(value: any): void {
+    if (value) {
+      this._value = value;
+    }
+  }
+
+  registerOnChange(fn: (_: any) => void): void {
+    this._onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {}
 
   ngOnChanges() {
     if (this.inputElementRef && this._type !== 'money' && this._value !== undefined) {

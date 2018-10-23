@@ -1,5 +1,4 @@
 import { Component, OnInit, ElementRef, Input, HostBinding, ViewEncapsulation } from '@angular/core';
-const classnames = require('classnames');
 
 @Component({
   selector: 'SliderSteps, nzm-slider-steps',
@@ -51,14 +50,14 @@ export class SliderSteps implements OnInit {
   }
   @Input()
   set upperBound(value: number) {
-    if (value && value !== this._upperBound) {
+    if (value !== undefined && value !== this._upperBound) {
       this._upperBound = value;
       this.setActiveCls();
     }
   }
   @Input()
   set lowerBound(value: number) {
-    if (value && value !== this.lowerBound) {
+    if (value !== undefined && value !== this.lowerBound) {
       this._lowerBound = value;
       this.setActiveCls();
     }
@@ -101,10 +100,10 @@ export class SliderSteps implements OnInit {
         style = { ...style, ...this._activeDotStyle };
       }
 
-      const pointClassName = classnames({
+      const pointClassName = {
         [`${this.prefixCls}-dot`]: true,
         [`${this.prefixCls}-dot-active`]: isActived
-      });
+      };
       stepItem.point = point;
       stepItem.stepStyle = style;
       stepItem.stepClass = pointClassName;
@@ -118,10 +117,10 @@ export class SliderSteps implements OnInit {
       const isActived =
         (!this._included && point === this._upperBound) ||
         (this._included && point <= this._upperBound && point >= this._lowerBound);
-      this.stepArray[i].stepClass = classnames({
+      this.stepArray[i].stepClass = {
         [`${this.prefixCls}-dot`]: true,
         [`${this.prefixCls}-dot-active`]: isActived
-      });
+      };
     }
   }
 

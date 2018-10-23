@@ -3,11 +3,9 @@ import {
   ComponentRef,
   ComponentFactory,
   ApplicationRef,
-  Compiler,
   ComponentFactoryResolver
 } from '@angular/core';
 import { CustomKeyboard } from '../custom-keyboard/custom-keyboard.component';
-const classnames = require('classnames');
 
 @Injectable()
 export class CustomInputService {
@@ -30,9 +28,9 @@ export class CustomInputService {
   static showKeyboard() {
     if (!this.isShow) {
       if (this.compRef) {
-        this.compRef.instance.wrapperCls = classnames({
+        this.compRef.instance.wrapperCls = {
           [`am-number-keyboard-wrapper`]: true
-        });
+        };
       } else {
         let container = document.querySelector(`#${this._keyboardPrefixCls}-container`);
         if (!container) {
@@ -53,10 +51,10 @@ export class CustomInputService {
   static hideKeyboard() {
     if (this.compRef && this.isShow) {
       this.isShow = false;
-      this.compRef.instance.wrapperCls = classnames({
+      this.compRef.instance.wrapperCls = {
         [`am-number-keyboard-wrapper`]: true,
         [`am-number-keyboard-wrapper-hide`]: true
-      });
+      };
     }
   }
 }

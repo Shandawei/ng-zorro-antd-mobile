@@ -118,7 +118,7 @@ This is the **Angular** implementation of **Ant Design Mobile** specification, s
 - The UI is fully Configurable and Scalable, easily adapt to all kinds of product style.
 - Use **TypeScript** to develop, provide type definition files, support type and attribute smart tips for easy business development.
 - Provide "Components are loaded on demand" / "Web page HD display" / "SVG Icon" optimization features, integrated development.
-- Support running in Ionic[[Guide]](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/issues/4).
+- Support running in Ionic[[Guide]](/#/docs/running-in-ionic/en).
 
 ## Environment Support
 
@@ -169,6 +169,6 @@ If you'd like to help us improve ng-zorro-antd-mobile, just create a [Pull Reque
 
 ## Need Help?
 
-For questions on how to use **NG-ZORRO-MOBILE**, please post questions to [<img alt="Stack Overflow" src="https://cdn.sstatic.net/Sites/stackoverflow/company/img/logos/so/so-logo.svg?v=2bb144720a66" width="140" />](http://stackoverflow.com/questions/tagged/ng-zorro-mobile) using the `ng-zorro-mobile` tag. If you're not finding what you need on stackoverflow, you can find us on [![Gitter](https://img.shields.io/gitter/room/ng-zorro/ng-zorro-antd-mobile.svg?style=flat-square)](https://gitter.im/ng-zorro/ng-zorro-antd-mobile) as well.
+For questions on how to use **NG-ZORRO-MOBILE**, please post questions to [<img alt="Stack Overflow" src="https://cdn.sstatic.net/Sites/stackoverflow/company/img/logos/so/so-logo.svg?v=2bb144720a66" width="140" />](http://stackoverflow.com/questions/tagged/ng-zorro-mobile) using the `ng-zorro-mobile` tag. If you're not finding what you need on StackOverflow, you can find us on [![Gitter](https://img.shields.io/gitter/room/ng-zorro/ng-zorro-antd-mobile.svg?style=flat-square)](https://gitter.im/ng-zorro/ng-zorro-antd-mobile) as well.
 
 As always, we encourage experienced users to help those who are not familiar with **NG-ZORRO-MOBILE**!
